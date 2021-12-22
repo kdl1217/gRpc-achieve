@@ -1,0 +1,61 @@
+plugins.apply("com.google.protobuf")
+
+
+sourceSets {
+    main {
+        proto {
+            // In addition to the default 'src/main/proto'
+            srcDir "src/main/grpc/protobuf"
+            // In addition to the default '**/*.proto' (use with caution).
+            // Using an extension other than 'proto' is NOT recommended,
+            // because when proto files are published along with class files, we can
+            // only tell the type of a file from its extension.
+            include '**/*.protodevel'
+        }
+    }
+}
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protocVersion"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+        }
+    }
+
+    generatedFilesBaseDir = "$projectDir/src"
+
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+                // 将生成的 XXXGrpc文件生成到java目录下
+                setOutputSubDir 'java'
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation "io.grpc:grpc-all"
+}
+
+tasks {
+    bootRun.enabled(false)
+    bootJar.enabled(false)
+    jar.enabled(true)
+}
+
+//tasks.bootRun {
+//    enabled false
+//}
+//
+//tasks.bootJar {
+//    enabled false
+//}
+//
+//tasks.jar {
+//    enabled true
+//}

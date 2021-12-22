@@ -1,0 +1,4 @@
+rootProject.name = 'gRpc-achieve'
+include 'common-proto'
+include 'examples'
+
